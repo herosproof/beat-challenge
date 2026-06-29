@@ -29,12 +29,15 @@ input{font-family:inherit;}
 
 .page{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 16px 60px;}
 
-.story-header{text-align:center;padding:18px 0 22px;position:relative;text-decoration:none;display:block;cursor:pointer;transition:opacity .2s;}
-.story-header:hover{opacity:.85;}
-.story-header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:220px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.story-eyebrow{font-family:'Press Start 2P',monospace;font-size:clamp(.42rem,1.9vw,.58rem);color:var(--gold-light);letter-spacing:.18em;opacity:.75;margin-bottom:14px;text-shadow:0 0 20px rgba(240,208,96,.4);}
-.story-title{font-family:'Press Start 2P',monospace;font-size:clamp(1.05rem,4.2vw,1.65rem);color:#fff;line-height:1.5;text-shadow:0 0 36px rgba(240,160,64,.55),0 0 70px rgba(224,116,58,.3);}
-.story-title .jp{display:block;font-family:'Zen Maru Gothic','Kosugi Maru',sans-serif;font-size:clamp(1.05rem,3.1vw,1.5rem);color:var(--orange);letter-spacing:.2em;margin-top:10px;text-shadow:0 0 20px rgba(240,160,64,.4);}
+/* ════════════ LOGO HEADER (matches Word Quest) ════════════ */
+.title-header{width:100%;background:linear-gradient(160deg,#2a1845 0%,#1e1235 60%,#150d28 100%);padding:26px 20px 18px;text-align:center;position:relative;box-shadow:0 4px 24px rgba(124,58,237,.35);border-bottom:1px solid rgba(167,139,250,.2);border-radius:0 0 20px 20px;margin-bottom:20px;overflow:hidden;text-decoration:none;display:block;cursor:pointer;}
+.title-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(144,96,192,.22) 0%,transparent 70%);pointer-events:none;}
+.title-logo-img{max-height:150px;max-width:92%;object-fit:contain;display:block;margin:0 auto 8px;position:relative;z-index:1;filter:drop-shadow(0 2px 16px rgba(167,139,250,.5));}
+.title-emblem{font-size:3rem;display:block;margin-bottom:8px;position:relative;z-index:1;animation:embFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(201,160,48,.5));}
+@keyframes embFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.title-game-name{font-family:'Press Start 2P',monospace;font-size:clamp(.8rem,3.5vw,1.1rem);color:#fff;text-shadow:0 0 24px rgba(240,160,64,.7),0 2px 4px rgba(0,0,0,.5);line-height:1.7;position:relative;z-index:1;}
+.title-sub{font-family:'Zen Maru Gothic','Kosugi Maru',sans-serif;font-size:clamp(.88rem,2.5vw,1.05rem);color:var(--gold-light);font-weight:600;letter-spacing:.12em;margin-top:4px;position:relative;z-index:1;}
+.header-divider{width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:10px auto 0;opacity:.6;position:relative;z-index:1;}
 
 .screen{display:none;}
 .screen.active{display:block;animation:fadeIn .4s ease;}
@@ -45,9 +48,9 @@ input{font-family:inherit;}
 .intro .jp{display:block;color:var(--text-muted);margin-top:4px;}
 .pick-label{text-align:center;font-family:'Press Start 2P',monospace;font-size:clamp(.5rem,2vw,.66rem);color:var(--gold-light);letter-spacing:.1em;margin:0 0 16px;text-shadow:2px 2px 0 var(--brown);}
 .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:28px;}
-.set-card{position:relative;background:var(--card-bg);border:2px solid transparent;border-radius:18px;padding:20px 16px;text-align:center;color:var(--text-dark);box-shadow:0 4px 18px var(--shadow),inset 0 1px 0 rgba(255,255,255,.8);transition:transform .15s,border-color .2s,box-shadow .2s;}
+.set-card{position:relative;background:var(--card-bg);border:3px solid transparent;border-radius:18px;padding:20px 16px;text-align:center;color:var(--text-dark);box-shadow:0 4px 18px var(--shadow),inset 0 1px 0 rgba(255,255,255,.8);transition:transform .15s,border-color .2s,box-shadow .2s,background .2s;}
 .set-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shadow);}
-.set-card.selected{border-color:var(--orange-deep);box-shadow:0 0 0 4px rgba(224,116,58,.2),0 8px 24px var(--shadow);}
+.set-card.selected{transform:translateY(2px) scale(1.03);background:#ffe87a;border-color:#c09010;box-shadow:0 0 0 3px rgba(240,200,40,.4),0 6px 22px rgba(200,160,20,.55),inset 0 1px 0 rgba(255,255,255,.7);}
 .set-card .ico{font-size:2.4rem;line-height:1;display:block;margin-bottom:8px;}
 .set-card .nm{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;line-height:1.25;}
 .set-card .nm .jp{display:block;font-family:'Zen Maru Gothic','Kosugi Maru',sans-serif;font-size:.84rem;color:var(--text-soft);font-weight:600;margin-top:2px;}
@@ -55,15 +58,16 @@ input{font-family:inherit;}
 .set-card .del{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(200,48,48,.12);color:#a83030;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
 .set-card .del:hover{background:rgba(200,48,48,.3);}
 .set-card .badge{position:absolute;top:8px;left:8px;font-size:.62rem;font-weight:700;font-family:'Fredoka',sans-serif;background:rgba(144,96,192,.16);color:#6f44a0;border-radius:10px;padding:2px 8px;letter-spacing:.04em;}
-.set-card.create{border:2px dashed rgba(201,160,48,.5);background:rgba(245,238,220,.06);color:var(--gold-pale);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;min-height:118px;}
-.set-card.create:hover{border-color:var(--orange);background:rgba(245,238,220,.1);}
-.set-card.create .ico{color:var(--orange);}
+.set-card.create{border:2px dashed rgba(201,160,48,.55);background:rgba(245,238,220,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;min-height:118px;}
+.set-card.create:hover{border-color:var(--orange);background:rgba(245,238,220,.1);transform:translateY(-3px);}
+.set-card.create .ico{color:var(--gold-light);}
 .set-card.create .nm{font-size:.96rem;color:var(--gold-pale);}
+.set-card.create .nm .jp{color:var(--gold-pale);font-weight:700;opacity:.92;}
 
 .speed-label{text-align:center;font-family:'Press Start 2P',monospace;font-size:clamp(.46rem,1.9vw,.6rem);color:var(--gold-light);letter-spacing:.1em;margin:0 0 12px;text-shadow:2px 2px 0 var(--brown);}
 .speed-row{display:flex;justify-content:center;gap:9px;margin:0 0 30px;flex-wrap:wrap;}
-.speed-pill{background:rgba(245,238,220,.07);border:1.5px solid rgba(201,160,48,.4);color:var(--gold-pale);border-radius:22px;padding:9px 18px;font-weight:600;font-size:.92rem;font-family:'Fredoka',sans-serif;transition:background .18s,border-color .18s,color .18s;}
-.speed-pill.sel{background:linear-gradient(135deg,var(--orange),var(--orange-deep));color:#fff7f2;border-color:transparent;box-shadow:0 3px 12px rgba(224,116,58,.4);}
+.speed-pill{background:rgba(245,238,220,.07);border:2px solid rgba(201,160,48,.4);color:var(--gold-pale);border-radius:22px;padding:9px 18px;font-weight:700;font-size:.92rem;font-family:'Fredoka',sans-serif;transition:background .18s,border-color .18s,color .18s,transform .12s;}
+.speed-pill.sel{background:#ffe87a;color:#6a4a08;border-color:#c09010;transform:translateY(1px) scale(1.05);box-shadow:0 0 0 3px rgba(240,200,40,.35),0 4px 14px rgba(200,160,20,.5);}
 
 .big-btn{display:block;margin:0 auto;background:linear-gradient(135deg,var(--orange),var(--orange-deep));border:none;border-radius:44px;color:#fff7f2;font-family:'Press Start 2P',monospace;font-size:clamp(.7rem,2.6vw,.92rem);letter-spacing:.06em;padding:20px 44px;box-shadow:0 6px 0 #b8532a,0 10px 24px rgba(224,116,58,.4);transition:transform .12s,box-shadow .12s;}
 .big-btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 #b8532a,0 14px 30px rgba(224,116,58,.5);}
@@ -73,7 +77,8 @@ input{font-family:inherit;}
 .audio-warn{text-align:center;margin-top:18px;font-size:.82rem;color:var(--orange);font-family:'Zen Maru Gothic','Kosugi Maru',sans-serif;display:none;}
 
 /* ════════════ PLAY SCREEN ════════════ */
-.play-wrap{position:relative;}
+.play-wrap{position:relative;opacity:0;transition:opacity .45s ease;}
+.play-wrap.show{opacity:1;}
 .exit-btn{position:absolute;top:-4px;right:0;z-index:6;background:rgba(30,18,53,.6);border:1px solid rgba(255,160,160,.35);color:#f5b8b8;border-radius:50%;width:38px;height:38px;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
 .exit-btn:hover{background:rgba(200,48,48,.35);}
 .round-box{margin:0 auto 20px;width:max-content;min-width:130px;background:var(--card-bg);border:3px solid var(--orange-deep);border-radius:14px;padding:10px 26px;text-align:center;box-shadow:0 4px 16px var(--shadow);}
@@ -81,8 +86,10 @@ input{font-family:inherit;}
 
 .word-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
 @media(max-width:560px){.word-grid{grid-template-columns:repeat(2,1fr);gap:11px;}}
-.word-grid.swap{animation:roundIn .34s ease;}
-@keyframes roundIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.word-grid.swap{animation:roundIn .45s ease;}
+@keyframes roundIn{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:none}}
+.word-grid.fadeout{animation:roundOut .3s ease forwards;}
+@keyframes roundOut{from{opacity:1}to{opacity:0;transform:scale(.98)}}
 .word-cell{position:relative;background:#fff;border:3px solid var(--purple-line);border-radius:16px;padding:18px 8px;text-align:center;color:var(--text-dark);min-height:138px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 3px 12px rgba(0,0,0,.28);transition:border-color .18s,background .18s,box-shadow .18s,transform .12s;}
 .word-cell .w-ico{font-size:2.7rem;line-height:1;}
 .word-cell .w-ico img{width:58px;height:58px;object-fit:contain;}
@@ -94,8 +101,8 @@ input{font-family:inherit;}
 @keyframes beatPop{0%{transform:scale(1)}38%{transform:scale(1.13)}100%{transform:scale(1)}}
 
 /* ════════════ VN OVERLAY (Lumi anchored to box) ════════════ */
-.vn{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;background:radial-gradient(ellipse at 50% 34%,rgba(58,37,88,.5),rgba(30,18,53,.93));backdrop-filter:blur(2px);padding:0 16px 4vh;}
-.vn.hide{display:none;}
+.vn{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;background:radial-gradient(ellipse at 50% 34%,rgba(58,37,88,.5),rgba(30,18,53,.93));backdrop-filter:blur(2px);padding:0 16px 4vh;opacity:1;visibility:visible;transition:opacity .4s ease;}
+.vn.hide{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s ease,visibility 0s .4s;}
 .vn-portrait{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;min-height:0;overflow:hidden;}
 .vn-portrait img{max-height:50vh;max-width:90%;object-fit:contain;object-position:bottom;display:block;}
 .vn-portrait .fallback{font-size:clamp(5rem,20vw,8rem);line-height:1;}
@@ -201,9 +208,12 @@ footer{margin-top:48px;text-align:center;padding:26px 0;border-top:1px solid rgb
 
 <div class="page">
 
-  <a class="story-header" href="https://herosproof.github.io">
-    <p class="story-eyebrow">✦ Hero's Proof · 勇者の証 ✦</p>
-    <h1 class="story-title">Beat Challenge<span class="jp">ビートチャレンジ</span></h1>
+  <a class="title-header" href="https://herosproof.github.io">
+    <img class="title-logo-img" id="title-logo" alt="Hero's Proof" onerror="this.style.display='none';document.getElementById('title-emblem').style.display='block';">
+    <span class="title-emblem" id="title-emblem" style="display:none">🥁</span>
+    <div class="title-game-name">BEAT CHALLENGE<br>ビートチャレンジ</div>
+    <div class="title-sub">✦ Say it on the beat! · リズムにのって ✦</div>
+    <div class="header-divider"></div>
   </a>
 
   <!-- ════════════ START ════════════ -->
@@ -221,7 +231,7 @@ footer{margin-top:48px;text-align:center;padding:26px 0;border-top:1px solid rgb
 
   <!-- ════════════ PLAY ════════════ -->
   <section class="screen" id="screen-play">
-    <div class="play-wrap">
+    <div class="play-wrap" id="play-wrap">
       <button class="exit-btn" id="exit-btn" title="Stop">✕</button>
       <div class="round-box"><b id="round-num">1 / 6</b></div>
       <div class="word-grid" id="word-grid"></div>
@@ -253,19 +263,36 @@ footer{margin-top:48px;text-align:center;padding:26px 0;border-top:1px solid rgb
   }
 })();
 
+/* ════════════ SOUND EFFECTS (Web Audio synth, like Word Quest) ════════════ */
+let actx=null,sfxGain=null;
+function ctx(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();sfxGain=actx.createGain();sfxGain.gain.value=0.9;sfxGain.connect(actx.destination);}catch(e){}}return actx;}
+function tone(f,type,dur,vol,delay=0,f2=null){try{const c=ctx();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(sfxGain||c.destination);o.type=type;o.frequency.setValueAtTime(f,c.currentTime+delay);if(f2)o.frequency.exponentialRampToValueAtTime(f2,c.currentTime+delay+dur);g.gain.setValueAtTime(0,c.currentTime+delay);g.gain.linearRampToValueAtTime(vol,c.currentTime+delay+.012);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+delay+dur);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+dur+.05);}catch(e){}}
+const sfxTap   =()=>tone(520,'sine',.06,.18);
+const sfxSelect=()=>{tone(660,'sine',.08,.22);tone(990,'sine',.08,.16,.04);};
+const sfxStart =()=>{[523,659,784,1047].forEach((f,i)=>tone(f,'sine',.14,.26,i*.07));};
+const sfxFanfare=()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.25,.28),i*120));setTimeout(()=>tone(1047,'sine',.5,.28),480);};
+
 /* ══════════════════════════════════════════════════════════════
    FILES — keep these next to index.html in the repo root:
      beat_challenge.mp3   (the beat track)
      lumi_tehepero.png    (Lumi's portrait for the intro/outro cards)
+     logo.png             (the Hero's Proof logo for the header)
    ══════════════════════════════════════════════════════════════ */
-const AUDIO_FILE  = 'beat_challenge.mp3';
-const LUMI_IMG    = 'lumi_tehepero.png';
+const AUDIO_FILE = 'beat_challenge.mp3';
+const LUMI_IMG   = 'lumi_tehepero.png';
+document.getElementById('title-logo').src='logo.png';
 
 /* ══════════════════════════════════════════════════════════════
-   BEAT TIMING — these are your real Audacity label times (seconds).
-   48 word-hits (6 sets × 8) + when Lumi's closing card appears.
+   BEAT TIMING — from your Audacity labels (seconds).
+   • introFadeOut : Lumi's opening card fades out
+   • setFadeIn[]  : when each set's grid fades IN (a few seconds
+                    BEFORE its first word, so kids can read ahead)
+   • beatTimes[]  : the 48 word-hit times (6 sets × 8)
+   • outroTime    : when Lumi's closing card appears
    ══════════════════════════════════════════════════════════════ */
 const BEAT = {
+  introFadeOut: 2.496584,
+  setFadeIn: [2.808657, 8.045562, 13.277910, 18.537594, 23.781332, 29.020514],
   beatTimes: [
     5.41459, 5.745011, 6.067769, 6.399148, 6.723822, 7.049454, 7.379396, 7.702761,
     10.658849, 10.98927, 11.312029, 11.643407, 11.968081, 12.293713, 12.623655, 12.94702,
@@ -274,10 +301,9 @@ const BEAT = {
     26.397594, 26.728014, 27.050773, 27.382152, 27.706826, 28.032458, 28.3624, 28.685764,
     31.63795, 31.96837, 32.291129, 32.622508, 32.947182, 33.272814, 33.602756, 33.92612,
   ],
-  outroTime: 34.266065,   // Lumi's closing card appears here
+  outroTime: 34.266065,
   beatsPerRound: 8,
 };
-const PREROLL = 0.7;   // how early each set's words appear before its first beat
 
 /* ── Lumi's lines (edit freely) ── */
 const LUMI_INTRO = {en:"Say the word when you hear the beat!<br>Don't mess up the rhythm!", jp:"ビートが聞こえたら言葉を言ってね！リズムをまちがえないで！"};
@@ -286,9 +312,8 @@ const LUMI_OUTRO = {en:"Phew! How did you do?<br>Nice rhythm, hero!", jp:"ふぅ
 /* ══════════════════════════════════════════════════════════════
    WORD SETS  ←←← built-in sets. Add your own here, OR use the
    in-app "Create Custom Set" button (saved on the device only).
-   Each word: en, jp, and EITHER  icon:'🔵'  OR  img:'assets/icons/x.png'.
-   If you give BOTH img and icon, the emoji is used as a fallback when
-   the image can't load. A set may have 1–48 words.
+   Each word: en, jp, and EITHER icon:'🔵' OR img:'assets/icons/x.png'.
+   Give BOTH img and icon → emoji is the fallback if the image fails.
    ══════════════════════════════════════════════════════════════ */
 const WORD_SETS = [
   { id:'numbers', name:'Numbers', jp:'すうじ', emoji:'🔢', words:[
@@ -328,13 +353,12 @@ function loadCustom(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');
 function saveCustom(arr){try{localStorage.setItem(LS_KEY,JSON.stringify(arr));return true;}catch(e){return false;}}
 let customSets=loadCustom();
 
-/* ── Build timeline from real beat times ── */
+/* ── Timeline ── */
 const BPR=BEAT.beatsPerRound;
 const slotTimes=BEAT.beatTimes.slice();
 const ROUNDS=Math.floor(slotTimes.length/BPR);
-const firstBeat=[],lastBeat=[];
-for(let r=0;r<ROUNDS;r++){firstBeat.push(slotTimes[r*BPR]);lastBeat.push(slotTimes[r*BPR+BPR-1]);}
-const outroAt=BEAT.outroTime;
+const setFadeIn=BEAT.setFadeIn.slice();
+const outroAt=BEAT.outroTime, introFadeOut=BEAT.introFadeOut;
 
 /* ── Speed control ── */
 const SPEEDS=[0.75,0.9,1,1.25];
@@ -347,7 +371,7 @@ function renderSpeeds(){
     const b=document.createElement('button');b.type='button';
     b.className='speed-pill'+(sp===selectedSpeed?' sel':'');
     b.textContent=sp+'×';
-    b.addEventListener('click',()=>{selectedSpeed=sp;try{localStorage.setItem('hp_beat_speed',sp);}catch(e){}renderSpeeds();});
+    b.addEventListener('click',()=>{selectedSpeed=sp;try{localStorage.setItem('hp_beat_speed',sp);}catch(e){}sfxTap();renderSpeeds();});
     speedRow.appendChild(b);
   });
 }
@@ -358,7 +382,6 @@ const setGrid=document.getElementById('set-grid');
 const startBtn=document.getElementById('start-btn');
 const startHint=document.getElementById('start-hint');
 let selectedSet=null;
-
 function makeSetCard(set,isCustom){
   const card=document.createElement('div');
   card.className='set-card';card.tabIndex=0;card.setAttribute('role','button');
@@ -370,7 +393,7 @@ function makeSetCard(set,isCustom){
   const select=()=>{
     document.querySelectorAll('.set-card').forEach(c=>c.classList.remove('selected'));
     card.classList.add('selected');selectedSet=set;startBtn.disabled=false;
-    startHint.textContent='Ready when you are! · 準備OK！';
+    startHint.textContent='Ready when you are! · 準備OK！';sfxSelect();
   };
   card.addEventListener('click',e=>{if(e.target.closest('.del'))return;select();});
   card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select();}});
@@ -393,7 +416,7 @@ function renderPicker(){
   const create=document.createElement('div');
   create.className='set-card create';create.tabIndex=0;create.setAttribute('role','button');
   create.innerHTML='<span class="ico">➕</span><span class="nm">Create Custom Set<span class="jp">オリジナルをつくる</span></span>';
-  const open=()=>openBuilder();
+  const open=()=>{sfxTap();openBuilder();};
   create.addEventListener('click',open);
   create.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
   setGrid.appendChild(create);
@@ -433,6 +456,7 @@ function buildRounds(set){
 /* ── Render ── */
 const wordGrid=document.getElementById('word-grid');
 const roundNum=document.getElementById('round-num');
+const playWrap=document.getElementById('play-wrap');
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function iconHTML(w){
   if(w.img){const fb=(w.icon||'').replace(/'/g,"\\'");return `<img src="${esc(w.img)}" alt="${esc(w.en)}" onerror="this.replaceWith(document.createTextNode('${fb}'))">`;}
@@ -458,18 +482,19 @@ function vnShow(line,withButtons){
 function vnHide(){vn.classList.add('hide');}
 
 /* ── Game loop ── */
-let rafId=null,displayedRound=-2,lastLit=-1,finished=false,started=false;
+let rafId=null,displayedRound=-2,lastLit=-1,finished=false,started=false,playShown=false,outroDone=false;
 function roundForTime(t){
-  if(t<firstBeat[0]-PREROLL)return -1;
-  let r=0;for(let i=0;i<ROUNDS;i++){if(t>=firstBeat[i]-PREROLL)r=i;else break;}
+  if(t<setFadeIn[0])return -1;
+  let r=0;for(let i=0;i<ROUNDS;i++){if(t>=setFadeIn[i])r=i;else break;}
   return r;
 }
 function play(){
   if(!selectedSet)return;
+  ctx();sfxStart();
   buildRounds(selectedSet);
   show('screen-play');
-  displayedRound=-2;lastLit=-1;finished=false;
-  renderRound(0);
+  displayedRound=-2;lastLit=-1;finished=false;outroDone=false;playShown=false;
+  playWrap.classList.remove('show');
   vnShow(LUMI_INTRO,false);
   audio.currentTime=0;audio.playbackRate=selectedSpeed;
   audio.play().catch(()=>{});
@@ -478,14 +503,25 @@ function play(){
 }
 function loop(){
   const t=audio.currentTime;
+
+  // Closing
   if(t>=outroAt||audio.ended){
-    if(!finished){finished=true;vnShow(LUMI_OUTRO,true);cancelAnimationFrame(rafId);}
+    if(!finished){finished=true;vnShow(LUMI_OUTRO,true);if(!outroDone){outroDone=true;sfxFanfare();}cancelAnimationFrame(rafId);}
     return;
   }
+  // Intro card
+  if(t<introFadeOut){
+    if(vn.classList.contains('hide'))vnShow(LUMI_INTRO,false);
+    rafId=requestAnimationFrame(loop);return;
+  }else if(!vn.classList.contains('hide')){
+    vnHide();   // Lumi intro fades out
+  }
+  // Which set?
   const r=roundForTime(t);
-  if(r<0){if(vn.classList.contains('hide'))vnShow(LUMI_INTRO,false);rafId=requestAnimationFrame(loop);return;}
-  if(!vn.classList.contains('hide'))vnHide();
+  if(r<0){ rafId=requestAnimationFrame(loop); return; } // brief gap before set 1
+  if(!playShown){playShown=true;playWrap.classList.add('show');}
   if(r!==displayedRound){displayedRound=r;lastLit=-1;renderRound(r);}
+  // Light words
   const base=r*BPR;let litCount=0;
   for(let b=0;b<BPR;b++){if(slotTimes[base+b]<=t)litCount=b+1;}
   const cells=wordGrid.children;
@@ -498,19 +534,18 @@ function loop(){
 }
 function stopGame(){
   cancelAnimationFrame(rafId);audio.pause();audio.currentTime=0;
-  vnHide();started=false;finished=false;show('screen-start');
+  vnHide();started=false;finished=false;playShown=false;playWrap.classList.remove('show');show('screen-start');
 }
 startBtn.addEventListener('click',play);
-document.getElementById('exit-btn').addEventListener('click',stopGame);
-document.getElementById('again-btn').addEventListener('click',()=>{vnHide();play();});
-document.getElementById('newset-btn').addEventListener('click',()=>{vnHide();stopGame();});
-audio.addEventListener('ended',()=>{if(started&&!finished){finished=true;vnShow(LUMI_OUTRO,true);cancelAnimationFrame(rafId);}});
+document.getElementById('exit-btn').addEventListener('click',()=>{sfxTap();stopGame();});
+document.getElementById('again-btn').addEventListener('click',()=>{sfxTap();vnHide();play();});
+document.getElementById('newset-btn').addEventListener('click',()=>{sfxTap();vnHide();stopGame();});
+audio.addEventListener('ended',()=>{if(started&&!finished){finished=true;vnShow(LUMI_OUTRO,true);if(!outroDone){outroDone=true;sfxFanfare();}cancelAnimationFrame(rafId);}});
 
 /* ════════════ CUSTOM BUILDER ════════════ */
 const builder=document.getElementById('builder');
 const bWords=document.getElementById('b-words');
 const bErr=document.getElementById('b-err');
-
 function resizeImage(file,max,cb){
   const reader=new FileReader();
   reader.onload=e=>{
@@ -523,13 +558,10 @@ function resizeImage(file,max,cb){
       cv.getContext('2d').drawImage(im,0,0,w,h);
       cb(cv.toDataURL('image/png'));
     };
-    im.onerror=()=>cb(null);
-    im.src=e.target.result;
+    im.onerror=()=>cb(null);im.src=e.target.result;
   };
-  reader.onerror=()=>cb(null);
-  reader.readAsDataURL(file);
+  reader.onerror=()=>cb(null);reader.readAsDataURL(file);
 }
-
 function makeWordRow(data){
   data=data||{en:'',jp:'',icon:'',img:''};
   const row=document.createElement('div');row.className='wrow';
@@ -575,8 +607,8 @@ function openBuilder(){
   builder.classList.add('show');
 }
 function closeBuilder(){builder.classList.remove('show');}
-document.getElementById('b-add').addEventListener('click',()=>bWords.appendChild(makeWordRow()));
-document.getElementById('b-cancel').addEventListener('click',closeBuilder);
+document.getElementById('b-add').addEventListener('click',()=>{sfxTap();bWords.appendChild(makeWordRow());});
+document.getElementById('b-cancel').addEventListener('click',()=>{sfxTap();closeBuilder();});
 document.getElementById('b-save').addEventListener('click',()=>{
   const name=document.getElementById('b-name').value.trim();
   const jp=document.getElementById('b-jp').value.trim();
@@ -594,7 +626,7 @@ document.getElementById('b-save').addEventListener('click',()=>{
   const set={id:'custom_'+Date.now(),name,jp,emoji,words};
   customSets.push(set);
   if(!saveCustom(customSets)){customSets.pop();bErr.textContent='Too big to save (try fewer or smaller images). · 保存できませんでした（画像を減らしてみて）。';bErr.style.display='block';return;}
-  closeBuilder();renderPicker();
+  sfxSelect();closeBuilder();renderPicker();
 });
 </script>
 </body>
