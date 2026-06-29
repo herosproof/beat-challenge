@@ -107,7 +107,7 @@ input{font-family:inherit;}
 /* ════════════ LUMI WHISTLE (play-screen mascot) ════════════ */
 .lumi-whistle{text-align:center;margin:24px auto 4px;opacity:0;transition:opacity .5s ease;pointer-events:none;}
 .lumi-whistle.show{opacity:1;}
-.lumi-whistle img{width:clamp(112px,26vw,150px);height:auto;object-fit:contain;transform-origin:center bottom;animation:whistleShake .4s ease-in-out infinite,whistleGlow 1.5s ease-in-out infinite;}
+.lumi-whistle img{width:clamp(160px,36vw,220px);height:auto;object-fit:contain;transform-origin:center bottom;animation:whistleShake var(--shake-dur,.33s) ease-in-out infinite,whistleGlow 1.5s ease-in-out infinite;}
 @keyframes whistleShake{0%,100%{transform:translateX(0) rotate(0deg)}20%{transform:translateX(-3px) rotate(-2.5deg)}40%{transform:translateX(3px) rotate(2.5deg)}60%{transform:translateX(-2px) rotate(-2deg)}80%{transform:translateX(2px) rotate(2deg)}}
 @keyframes whistleGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(240,208,96,.5)) drop-shadow(0 0 14px rgba(240,160,64,.35))}50%{filter:drop-shadow(0 0 13px rgba(240,208,96,.85)) drop-shadow(0 0 28px rgba(240,160,64,.6))}}
 
@@ -358,6 +358,17 @@ const WORD_SETS = [
     {en:'lion',icon:'🦁',jp:'ライオン'},{en:'frog',icon:'🐸',jp:'かえる'},{en:'horse',icon:'🐴',jp:'うま'},
     {en:'pig',icon:'🐷',jp:'ぶた'},{en:'monkey',icon:'🐵',jp:'さる'},{en:'elephant',icon:'🐘',jp:'ぞう'},
   ]},
+  { id:'sports', name:'Sports', jp:'スポーツ', emoji:'🏀', words:[
+    {en:'basketball',icon:'🏀',jp:'バスケットボール'},{en:'tennis',icon:'🎾',jp:'テニス'},{en:'soccer',icon:'⚽',jp:'サッカー'},
+    {en:'baseball',icon:'⚾',jp:'やきゅう'},{en:'swimming',icon:'🏊🏾‍♀️',jp:'すいえい'},{en:'skiing',icon:'⛷️',jp:'スキー'},
+    {en:'volleyball',icon:'🏐',jp:'バレーボール'},{en:'rugby',icon:'🏉',jp:'ラグビー'},
+  ]},
+  { id:'food', name:'Food', jp:'たべもの', emoji:'🍔', words:[
+    {en:'hamburger',icon:'🍔',jp:'ハンバーガー'},{en:'pizza',icon:'🍕',jp:'ピザ'},{en:'donut',icon:'🍩',jp:'ドーナツ'},
+    {en:'cookie',icon:'🍪',jp:'クッキー'},{en:'sandwich',icon:'🥪',jp:'サンドイッチ'},{en:'hotdog',icon:'🌭',jp:'ホットドッグ'},
+    {en:'ice cream',icon:'🍦',jp:'アイスクリーム'},{en:'pie',icon:'🥧',jp:'パイ'},{en:'steak',icon:'🥩',jp:'ステーキ'},
+    {en:'sushi',icon:'🍣',jp:'すし'},
+  ]},
 ];
 
 /* ── On-device custom sets (localStorage) ── */
@@ -385,7 +396,7 @@ function renderSpeeds(){
     const b=document.createElement('button');b.type='button';
     b.className='speed-pill'+(sp===selectedSpeed?' sel':'');
     b.textContent=sp+'×';
-    b.addEventListener('click',()=>{selectedSpeed=sp;try{localStorage.setItem('hp_beat_speed',sp);}catch(e){}sfxTap();renderSpeeds();});
+    b.addEventListener('click',()=>{selectedSpeed=sp;try{localStorage.setItem('hp_beat_speed',sp);}catch(e){}sfxTap();applyWhistleSpeed(sp);renderSpeeds();});
     speedRow.appendChild(b);
   });
 }
@@ -475,6 +486,13 @@ const wordGrid=document.getElementById('word-grid');
 const roundNum=document.getElementById('round-num');
 const playWrap=document.getElementById('play-wrap');
 const lumiWhistle=document.getElementById('lumi-whistle');
+/* Lumi's wiggle matches the word-hit cadence (~0.327s/beat at 1x, from the
+   label data) and speeds up / slows down with the chosen playback rate. */
+const SHAKE_BEAT=0.327;
+function applyWhistleSpeed(sp){
+  const img=lumiWhistle.querySelector('img');
+  if(img)img.style.setProperty('--shake-dur',(SHAKE_BEAT/sp).toFixed(3)+'s');
+}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function iconHTML(w){
   if(w.img){const fb=(w.icon||'').replace(/'/g,"\\'");return `<img src="${esc(w.img)}" alt="${esc(w.en)}" onerror="this.replaceWith(document.createTextNode('${fb}'))">`;}
@@ -514,7 +532,7 @@ function play(){
   displayedRound=-2;lastLit=-1;finished=false;outroDone=false;playShown=false;
   playWrap.classList.remove('show');lumiWhistle.classList.remove('show');
   vnShow(LUMI_INTRO,false);
-  audio.currentTime=0;audio.playbackRate=selectedSpeed;
+  audio.currentTime=0;audio.playbackRate=selectedSpeed;applyWhistleSpeed(selectedSpeed);
   audio.play().catch(()=>{});
   started=true;
   cancelAnimationFrame(rafId);loop();
