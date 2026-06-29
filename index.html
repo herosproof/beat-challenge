@@ -59,6 +59,8 @@ input{font-family:inherit;}
 .set-card .cnt{margin-top:7px;font-size:.76rem;color:var(--brown);opacity:.75;font-weight:600;font-family:'Fredoka',sans-serif;}
 .set-card .del{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(200,48,48,.12);color:#a83030;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
 .set-card .del:hover{background:rgba(200,48,48,.3);}
+.set-card .edit{position:absolute;top:8px;right:38px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(124,96,192,.16);color:#6f44a0;font-size:.78rem;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.set-card .edit:hover{background:rgba(124,96,192,.34);}
 .set-card .badge{position:absolute;top:8px;left:8px;font-size:.62rem;font-weight:700;font-family:'Fredoka',sans-serif;background:rgba(144,96,192,.16);color:#6f44a0;border-radius:10px;padding:2px 8px;letter-spacing:.04em;}
 .set-card.create{border:2px dashed rgba(201,160,48,.55);background:rgba(245,238,220,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;min-height:118px;}
 .set-card.create:hover{border-color:var(--orange);background:rgba(245,238,220,.1);transform:translateY(-3px);}
@@ -101,6 +103,13 @@ input{font-family:inherit;}
 .word-cell.lit .w-en{color:var(--orange-deep);}
 .word-cell.pop{animation:beatPop .28s ease;}
 @keyframes beatPop{0%{transform:scale(1)}38%{transform:scale(1.13)}100%{transform:scale(1)}}
+
+/* ════════════ LUMI WHISTLE (play-screen mascot) ════════════ */
+.lumi-whistle{text-align:center;margin:24px auto 4px;opacity:0;transition:opacity .5s ease;pointer-events:none;}
+.lumi-whistle.show{opacity:1;}
+.lumi-whistle img{width:clamp(112px,26vw,150px);height:auto;object-fit:contain;transform-origin:center bottom;animation:whistleShake .4s ease-in-out infinite,whistleGlow 1.5s ease-in-out infinite;}
+@keyframes whistleShake{0%,100%{transform:translateX(0) rotate(0deg)}20%{transform:translateX(-3px) rotate(-2.5deg)}40%{transform:translateX(3px) rotate(2.5deg)}60%{transform:translateX(-2px) rotate(-2deg)}80%{transform:translateX(2px) rotate(2deg)}}
+@keyframes whistleGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(240,208,96,.5)) drop-shadow(0 0 14px rgba(240,160,64,.35))}50%{filter:drop-shadow(0 0 13px rgba(240,208,96,.85)) drop-shadow(0 0 28px rgba(240,160,64,.6))}}
 
 /* ════════════ VN OVERLAY (Lumi anchored to box) ════════════ */
 .vn{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;background:radial-gradient(ellipse at 50% 34%,rgba(58,37,88,.5),rgba(30,18,53,.93));backdrop-filter:blur(2px);padding:0 16px 4vh;opacity:1;visibility:visible;transition:opacity .4s ease;}
@@ -189,7 +198,7 @@ footer{margin-top:48px;text-align:center;padding:26px 0;border-top:1px solid rgb
 <!-- Custom set builder -->
 <div class="builder" id="builder">
   <div class="builder-inner">
-    <h2>Make Your Own Beat Challenge!<span class="jp">オリジナルのビートチャレンジをつくろう！</span></h2>
+    <h2 id="b-title">Make Your Own Beat Challenge!<span class="jp">オリジナルのビートチャレンジをつくろう！</span></h2>
     <p class="note">Saved only on this device — not shared online. 💾<br>このデバイスだけに保存されます（ネットには公開されません）。</p>
     <p class="sub-label">Set Name · セットの名前</p>
     <div class="fld">
@@ -237,6 +246,9 @@ footer{margin-top:48px;text-align:center;padding:26px 0;border-top:1px solid rgb
       <button class="exit-btn" id="exit-btn" title="Stop">✕</button>
       <div class="round-box"><b id="round-num">1 / 6</b></div>
       <div class="word-grid" id="word-grid"></div>
+      <div class="lumi-whistle" id="lumi-whistle">
+        <img src="lumi-whistle.png" alt="Lumi cheering you on" onerror="this.closest('.lumi-whistle').style.display='none'">
+      </div>
     </div>
   </section>
 
@@ -363,7 +375,7 @@ const setFadeIn=BEAT.setFadeIn.slice();
 const outroAt=BEAT.outroTime, introFadeOut=BEAT.introFadeOut;
 
 /* ── Speed control ── */
-const SPEEDS=[0.75,0.9,1,1.25];
+const SPEEDS=[0.75,0.9,1,1.1,1.25];
 let selectedSpeed=parseFloat(localStorage.getItem('hp_beat_speed'))||1;
 if(!SPEEDS.includes(selectedSpeed))selectedSpeed=1;
 const speedRow=document.getElementById('speed-row');
@@ -391,15 +403,18 @@ function makeSetCard(set,isCustom){
     <span class="ico">${set.emoji||'⭐'}</span>
     <span class="nm">${set.name}${set.jp?`<span class="jp">${set.jp}</span>`:''}</span>
     <span class="cnt">${set.words.length} word${set.words.length===1?'':'s'}</span>
-    ${isCustom?'<button class="del" title="Delete">🗑</button>':''}`;
+    ${isCustom?'<button class="edit" title="Edit · へんしゅう">✏️</button><button class="del" title="Delete · さくじょ">🗑</button>':''}`;
   const select=()=>{
     document.querySelectorAll('.set-card').forEach(c=>c.classList.remove('selected'));
     card.classList.add('selected');selectedSet=set;startBtn.disabled=false;
     startHint.textContent='Ready when you are! · 準備OK！';sfxSelect();
   };
-  card.addEventListener('click',e=>{if(e.target.closest('.del'))return;select();});
+  card.addEventListener('click',e=>{if(e.target.closest('.del')||e.target.closest('.edit'))return;select();});
   card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select();}});
   if(isCustom){
+    card.querySelector('.edit').addEventListener('click',e=>{
+      e.stopPropagation();sfxTap();openBuilder(set);
+    });
     card.querySelector('.del').addEventListener('click',e=>{
       e.stopPropagation();
       if(confirm(`Delete "${set.name}"? · 「${set.name}」を消しますか？`)){
@@ -459,6 +474,7 @@ function buildRounds(set){
 const wordGrid=document.getElementById('word-grid');
 const roundNum=document.getElementById('round-num');
 const playWrap=document.getElementById('play-wrap');
+const lumiWhistle=document.getElementById('lumi-whistle');
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function iconHTML(w){
   if(w.img){const fb=(w.icon||'').replace(/'/g,"\\'");return `<img src="${esc(w.img)}" alt="${esc(w.en)}" onerror="this.replaceWith(document.createTextNode('${fb}'))">`;}
@@ -496,7 +512,7 @@ function play(){
   buildRounds(selectedSet);
   show('screen-play');
   displayedRound=-2;lastLit=-1;finished=false;outroDone=false;playShown=false;
-  playWrap.classList.remove('show');
+  playWrap.classList.remove('show');lumiWhistle.classList.remove('show');
   vnShow(LUMI_INTRO,false);
   audio.currentTime=0;audio.playbackRate=selectedSpeed;
   audio.play().catch(()=>{});
@@ -508,7 +524,7 @@ function loop(){
 
   // Closing
   if(t>=outroAt||audio.ended){
-    if(!finished){finished=true;vnShow(LUMI_OUTRO,true);if(!outroDone){outroDone=true;sfxFanfare();}cancelAnimationFrame(rafId);}
+    if(!finished){finished=true;lumiWhistle.classList.remove('show');vnShow(LUMI_OUTRO,true);cancelAnimationFrame(rafId);}
     return;
   }
   // Intro card
@@ -521,7 +537,7 @@ function loop(){
   // Which set?
   const r=roundForTime(t);
   if(r<0){ rafId=requestAnimationFrame(loop); return; } // brief gap before set 1
-  if(!playShown){playShown=true;playWrap.classList.add('show');}
+  if(!playShown){playShown=true;playWrap.classList.add('show');lumiWhistle.classList.add('show');}
   if(r!==displayedRound){displayedRound=r;lastLit=-1;renderRound(r);}
   // Light words
   const base=r*BPR;let litCount=0;
@@ -536,13 +552,13 @@ function loop(){
 }
 function stopGame(){
   cancelAnimationFrame(rafId);audio.pause();audio.currentTime=0;
-  vnHide();started=false;finished=false;playShown=false;playWrap.classList.remove('show');show('screen-start');
+  vnHide();started=false;finished=false;playShown=false;playWrap.classList.remove('show');lumiWhistle.classList.remove('show');show('screen-start');
 }
 startBtn.addEventListener('click',play);
 document.getElementById('exit-btn').addEventListener('click',()=>{sfxTap();stopGame();});
 document.getElementById('again-btn').addEventListener('click',()=>{sfxTap();vnHide();play();});
 document.getElementById('newset-btn').addEventListener('click',()=>{sfxTap();vnHide();stopGame();});
-audio.addEventListener('ended',()=>{if(started&&!finished){finished=true;vnShow(LUMI_OUTRO,true);if(!outroDone){outroDone=true;sfxFanfare();}cancelAnimationFrame(rafId);}});
+audio.addEventListener('ended',()=>{if(started&&!finished){finished=true;lumiWhistle.classList.remove('show');vnShow(LUMI_OUTRO,true);cancelAnimationFrame(rafId);}});
 
 /* ════════════ CUSTOM BUILDER ════════════ */
 const builder=document.getElementById('builder');
@@ -599,16 +615,28 @@ function makeWordRow(data){
   row.querySelector('.rm').addEventListener('click',()=>row.remove());
   return row;
 }
-function openBuilder(){
-  document.getElementById('b-name').value='';
-  document.getElementById('b-jp').value='';
-  document.getElementById('b-emoji').value='';
+let editingId=null;
+function openBuilder(editSet){
+  editingId=editSet?editSet.id:null;
+  const title=document.getElementById('b-title');
+  const saveBtn=document.getElementById('b-save');
+  document.getElementById('b-name').value=editSet?editSet.name||'':'';
+  document.getElementById('b-jp').value=editSet?editSet.jp||'':'';
+  document.getElementById('b-emoji').value=editSet&&editSet.emoji&&editSet.emoji!=='⭐'?editSet.emoji:'';
   bWords.innerHTML='';bErr.style.display='none';
-  for(let i=0;i<4;i++)bWords.appendChild(makeWordRow());
+  if(editSet){
+    title.innerHTML='Edit Your Set<span class="jp">セットをへんしゅう</span>';
+    saveBtn.textContent='💾 Update Set · 更新';
+    editSet.words.forEach(w=>bWords.appendChild(makeWordRow(w)));
+  }else{
+    title.innerHTML='Make Your Own Beat Challenge!<span class="jp">オリジナルのビートチャレンジをつくろう！</span>';
+    saveBtn.textContent='💾 Save Set · 保存';
+    for(let i=0;i<4;i++)bWords.appendChild(makeWordRow());
+  }
   if(!storageOK){bErr.textContent='Note: saving may not work in this preview, but will work on the live site.';bErr.style.display='block';}
   builder.classList.add('show');
 }
-function closeBuilder(){builder.classList.remove('show');}
+function closeBuilder(){builder.classList.remove('show');editingId=null;}
 document.getElementById('b-add').addEventListener('click',()=>{sfxTap();bWords.appendChild(makeWordRow());});
 document.getElementById('b-cancel').addEventListener('click',()=>{sfxTap();closeBuilder();});
 document.getElementById('b-save').addEventListener('click',()=>{
@@ -625,9 +653,18 @@ document.getElementById('b-save').addEventListener('click',()=>{
     if(en||img||emo)words.push({en,jp:wjp,icon:emo,img});
   });
   if(!words.length){bErr.textContent='Add at least one word. · ことばを1つ以上入れてね。';bErr.style.display='block';return;}
-  const set={id:'custom_'+Date.now(),name,jp,emoji,words};
-  customSets.push(set);
-  if(!saveCustom(customSets)){customSets.pop();bErr.textContent='Too big to save (try fewer or smaller images). · 保存できませんでした（画像を減らしてみて）。';bErr.style.display='block';return;}
+  if(editingId){
+    const idx=customSets.findIndex(s=>s.id===editingId);
+    if(idx<0){editingId=null;bErr.textContent='Could not find that set. · セットが見つかりませんでした。';bErr.style.display='block';return;}
+    const prev=customSets[idx];
+    customSets[idx]={id:editingId,name,jp,emoji,words};
+    if(!saveCustom(customSets)){customSets[idx]=prev;bErr.textContent='Too big to save (try fewer or smaller images). · 保存できませんでした（画像を減らしてみて）。';bErr.style.display='block';return;}
+    if(selectedSet&&selectedSet.id===editingId)selectedSet=customSets[idx];
+  }else{
+    const set={id:'custom_'+Date.now(),name,jp,emoji,words};
+    customSets.push(set);
+    if(!saveCustom(customSets)){customSets.pop();bErr.textContent='Too big to save (try fewer or smaller images). · 保存できませんでした（画像を減らしてみて）。';bErr.style.display='block';return;}
+  }
   sfxSelect();closeBuilder();renderPicker();
 });
 </script>
