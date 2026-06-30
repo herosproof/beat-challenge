@@ -107,8 +107,9 @@ input{font-family:inherit;}
 /* ════════════ LUMI WHISTLE (play-screen mascot) ════════════ */
 .lumi-whistle{text-align:center;margin:24px auto 4px;opacity:0;transition:opacity .5s ease;pointer-events:none;}
 .lumi-whistle.show{opacity:1;}
-.lumi-whistle img{width:clamp(160px,36vw,220px);height:auto;object-fit:contain;transform-origin:center bottom;animation:whistleShake var(--shake-dur,.33s) ease-in-out infinite,whistleGlow 1.5s ease-in-out infinite;}
-@keyframes whistleShake{0%,100%{transform:translateX(0) rotate(0deg)}20%{transform:translateX(-3px) rotate(-2.5deg)}40%{transform:translateX(3px) rotate(2.5deg)}60%{transform:translateX(-2px) rotate(-2deg)}80%{transform:translateX(2px) rotate(2deg)}}
+.lumi-whistle img{width:clamp(192px,43vw,264px);height:auto;object-fit:contain;transform-origin:center bottom;animation:whistleGlow 1.5s ease-in-out infinite;}
+.lumi-whistle img.beat{animation:lumiPulse .26s ease,whistleGlow 1.5s ease-in-out infinite;}
+@keyframes lumiPulse{0%{transform:scale(1)}30%{transform:scale(1.18)}70%{transform:scale(0.97)}100%{transform:scale(1)}}
 @keyframes whistleGlow{0%,100%{filter:drop-shadow(0 0 6px rgba(240,208,96,.5)) drop-shadow(0 0 14px rgba(240,160,64,.35))}50%{filter:drop-shadow(0 0 13px rgba(240,208,96,.85)) drop-shadow(0 0 28px rgba(240,160,64,.6))}}
 
 /* ════════════ VN OVERLAY (Lumi anchored to box) ════════════ */
@@ -321,7 +322,7 @@ const BEAT = {
 
 /* ── Lumi's lines (edit freely) ── */
 const LUMI_INTRO = {en:"Say the word when you hear the beat!<br>Don't mess up the rhythm!", jp:"ビートが聞こえたら言葉を言ってね！リズムをまちがえないで！"};
-const LUMI_OUTRO = {en:"Phew! How did you do? Nice rhythm, hero!", jp:"ふぅ〜！どうだったかな？ ナイスリズム、ヒーロー！"};
+const LUMI_OUTRO = {en:"Phew! How did you do?<br>Nice rhythm, hero!", jp:"ふぅ〜！どうだったかな？ナイスリズム、ヒーロー！"};
 
 /* ══════════════════════════════════════════════════════════════
    WORD SETS  ←←← built-in sets. Add your own here, OR use the
@@ -396,7 +397,7 @@ function renderSpeeds(){
     const b=document.createElement('button');b.type='button';
     b.className='speed-pill'+(sp===selectedSpeed?' sel':'');
     b.textContent=sp+'×';
-    b.addEventListener('click',()=>{selectedSpeed=sp;try{localStorage.setItem('hp_beat_speed',sp);}catch(e){}sfxTap();applyWhistleSpeed(sp);renderSpeeds();});
+    b.addEventListener('click',()=>{selectedSpeed=sp;try{localStorage.setItem('hp_beat_speed',sp);}catch(e){}sfxTap();renderSpeeds();});
     speedRow.appendChild(b);
   });
 }
@@ -486,13 +487,7 @@ const wordGrid=document.getElementById('word-grid');
 const roundNum=document.getElementById('round-num');
 const playWrap=document.getElementById('play-wrap');
 const lumiWhistle=document.getElementById('lumi-whistle');
-/* Lumi's wiggle matches the word-hit cadence (~0.327s/beat at 1x, from the
-   label data) and speeds up / slows down with the chosen playback rate. */
-const SHAKE_BEAT=0.327;
-function applyWhistleSpeed(sp){
-  const img=lumiWhistle.querySelector('img');
-  if(img)img.style.setProperty('--shake-dur',(SHAKE_BEAT/sp).toFixed(3)+'s');
-}
+/* Lumi's pulse is driven by the beat loop below — no manual speed calc needed. */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function iconHTML(w){
   if(w.img){const fb=(w.icon||'').replace(/'/g,"\\'");return `<img src="${esc(w.img)}" alt="${esc(w.en)}" onerror="this.replaceWith(document.createTextNode('${fb}'))">`;}
@@ -532,7 +527,7 @@ function play(){
   displayedRound=-2;lastLit=-1;finished=false;outroDone=false;playShown=false;
   playWrap.classList.remove('show');lumiWhistle.classList.remove('show');
   vnShow(LUMI_INTRO,false);
-  audio.currentTime=0;audio.playbackRate=selectedSpeed;applyWhistleSpeed(selectedSpeed);
+  audio.currentTime=0;audio.playbackRate=selectedSpeed;
   audio.play().catch(()=>{});
   started=true;
   cancelAnimationFrame(rafId);loop();
@@ -565,6 +560,8 @@ function loop(){
   if(litCount-1!==lastLit&&litCount>0){
     lastLit=litCount-1;const c=cells[lastLit];
     if(c){c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop');}
+    const li=lumiWhistle.querySelector('img');
+    if(li){li.classList.remove('beat');void li.offsetWidth;li.classList.add('beat');}
   }
   rafId=requestAnimationFrame(loop);
 }
