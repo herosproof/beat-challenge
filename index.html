@@ -320,7 +320,7 @@ const BEAT = {
 
 /* ── Lumi's lines (edit freely) ── */
 const LUMI_INTRO = {en:"Say the word when you hear the beat!<br>Don't mess up the rhythm!", jp:"ビートが聞こえたら言葉を言ってね！リズムをまちがえないで！"};
-const LUMI_OUTRO = {en:"Phew! How did you do? Nice rhythm, hero!", jp:"ふぅ〜！どうだったかな？ナイスリズム、ヒーロー！"};
+const LUMI_OUTRO = {en:"Phew! How did you do?<br>Nice rhythm, hero!", jp:"ふぅ〜！どうだったかな？ナイスリズム、ヒーロー！"};
 
 /* ══════════════════════════════════════════════════════════════
    WORD SETS  ←←← built-in sets. Add your own here, OR use the
@@ -385,7 +385,7 @@ const setFadeIn=BEAT.setFadeIn.slice();
 const outroAt=BEAT.outroTime, introFadeOut=BEAT.introFadeOut;
 
 /* ── Speed control ── */
-const SPEEDS=[0.75,0.9,1,1.1,1.25];
+const SPEEDS=[0.5,0.75,0.9,1,1.1,1.25];
 let selectedSpeed=parseFloat(localStorage.getItem('hp_beat_speed'))||1;
 if(!SPEEDS.includes(selectedSpeed))selectedSpeed=1;
 const speedRow=document.getElementById('speed-row');
